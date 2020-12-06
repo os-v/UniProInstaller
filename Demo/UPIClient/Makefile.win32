@@ -1,0 +1,40 @@
+
+PROJECT = UPIClient
+TARGETNAME = $(PROJECT).exe
+TARGETPATH = ..\..\Bin
+TARGETTEMP = ..\..\Temp\$(PROJECT)
+SOURCEPATH = .
+INCLUDEPATH = 
+DEFINES = /D WIN32 /D NDEBUG /D _CONSOLE /D _UNICODE /D UNICODE /D _CRT_SECURE_NO_WARNINGS
+LIBFILES = advapi32.lib
+MANIFEST = /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed 
+CFLAGS = /c /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /Gm- /EHsc /MT /GS /Gy /fp:precise /permissive- /Zc:wchar_t /Zc:forScope /Zc:inline /Gd /Fd$(TARGETTEMP)\$(PROJECT).pdb
+LFLAGS = /INCREMENTAL:NO /NOLOGO /MANIFEST /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /DYNAMICBASE /NXCOMPAT $(MANIFEST) $(LIBFILES)
+
+OBJFILES = \
+	$(TARGETTEMP)\Logger.obj \
+	$(TARGETTEMP)\UtilsMisc.obj \
+	$(TARGETTEMP)\main.obj
+
+all: prepare $(PROJECT)
+
+clean:
+	@if exist $(TARGETTEMP) rmdir /S /Q $(TARGETTEMP)
+
+prepare:
+	-mkdir $(TARGETTEMP)
+
+$(PROJECT): $(TARGETNAME)
+
+$(TARGETNAME) : $(OBJFILES)
+	link $(LFLAGS) /out:$(TARGETPATH)\$(TARGETNAME) $(OBJFILES)
+
+$(TARGETTEMP)\Logger.obj: $(SOURCEPATH)\..\..\Common\Logger.cpp
+	cl $(CFLAGS) $(DEFINES) /Fo$(TARGETTEMP)\Logger.obj $?
+ 
+$(TARGETTEMP)\UtilsMisc.obj: $(SOURCEPATH)\..\..\Common\UtilsMisc.cpp
+	cl $(CFLAGS) $(DEFINES) /Fo$(TARGETTEMP)\UtilsMisc.obj $?
+ 
+$(TARGETTEMP)\main.obj: $(SOURCEPATH)\main.cpp
+	cl $(CFLAGS) $(DEFINES) /Fo$(TARGETTEMP)\main.obj $?
+ 

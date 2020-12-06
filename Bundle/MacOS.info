@@ -1,0 +1,69 @@
+;$APPBACK	- backup temp path
+;$APPBUNDLE	- temp Bundle path
+;$APPPATH	- destination path
+;$APPTEMP	- installer temp path
+
+[Common]
+UUID=BA5E1D3F-D08D-420F-97B4-0E5007D1DC09
+Version=2.0.1
+AppPath=/Library/Application Support/UPIDemo
+ProductName=UPIDemo
+Publisher=UPIDemo LLC
+Language=Prompt
+
+[Files]
+com.upidemo.client.plist=,/Library/LaunchAgents,644,root:wheel
+com.upidemo.service.plist=,/Library/LaunchDaemons,644,root:wheel
+UPIClient=,$APPPATH,755,root:wheel
+UPIService=,$APPPATH,755,root:wheel
+Uninstall.app=,$APPPATH,755,root:wheel
+main.conf=,$APPPATH,644,root:wheel
+
+[Install]
+ExtraConfig=true
+
+[Install.PreCommands]
+@1=launchctl unload /Library/LaunchAgents/com.upidemo.client.plist
+@2=^:launchctl unload -w /Library/LaunchDaemons/com.upidemo.service.plist
+
+[Install.PostCommands]
+@1=defaults write /Library/Preferences/com.apple.loginwindow DisableFDEAutoLogin -bool YES
+@2=defaults write /Library/Preferences/com.apple.loginwindow SHOWFULLNAME YES
+@3=defaults write /Library/Preferences/com.apple.loginwindow PasswordExpirationDays -int 0
+@4=launchctl load /Library/LaunchAgents/com.upidemo.client.plist
+@5=^:launchctl load -w /Library/LaunchDaemons/com.upidemo.service.plist
+
+[Update]
+
+[Update.PreCommands]
+@1=cp "$APPPATH/main.conf" "$APPBACK"
+@2=cp "$APPPATH/main.db" "$APPBACK"
+
+[Update.PostCommands]
+@1=$APPPATH/UPIService -update $APPBACK\main.conf $APPBACK\main.db
+@2=^:launchctl unload -w /Library/LaunchDaemons/com.upidemo.service.plist
+@3=cp "$APPBACK/main.conf" "$APPPATH"
+@4=cp "$APPBACK/main.db" "$APPPATH"
+@5=^:launchctl load -w /Library/LaunchDaemons/com.upidemo.service.plist
+
+[Repair]
+
+[Repair.PreCommands]
+@1=cp "$APPPATH/main.conf" "$APPBACK"
+@2=cp "$APPPATH/main.db" "$APPBACK"
+
+[Repair.PostCommands]
+@1=^:launchctl unload -w /Library/LaunchDaemons/com.upidemo.service.plist
+@2=cp "$APPBACK/main.conf" "$APPPATH"
+@3=cp "$APPBACK/main.db" "$APPPATH"
+@4=^:launchctl load -w /Library/LaunchDaemons/com.upidemo.service.plist
+
+[Uninstall]
+
+[Uninstall.PreCommands]
+@1=launchctl unload /Library/LaunchAgents/com.upidemo.client.plist
+@2=^:launchctl unload -w /Library/LaunchDaemons/com.upidemo.service.plist
+@3=security authorizationdb write system.login.console < $APPPATH/ConfLogin.plist
+@4=security authorizationdb write system.login.screensaver use-login-window-ui
+
+[Uninstall.PostCommands]

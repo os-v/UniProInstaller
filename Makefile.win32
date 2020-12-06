@@ -1,0 +1,152 @@
+
+PLATFORM = Win32
+TARGETBIN = .\Bin
+TARGETTEMP = .\Temp
+
+IPROJECT = UPInstall
+ITARGETNAME = $(IPROJECT).exe
+ITARGETPATH = $(TARGETBIN)
+ITARGETTEMP = $(TARGETTEMP)\$(IPROJECT)
+
+UPROJECT = UPUninstall
+UTARGETNAME = $(UPROJECT).exe
+UTARGETPATH = $(TARGETBIN)
+UTARGETTEMP = $(TARGETTEMP)\$(UPROJECT)
+
+SOURCEPATH = .
+INCLUDEPATH = 
+DEFINES = /D WIN32 /D NDEBUG /D _UNICODE /D UNICODE /D _CRT_SECURE_NO_WARNINGS
+LIBFILES = fltk.lib fltkimages.lib fltkpng.lib fltkzlib.lib user32.lib gdi32.lib advapi32.lib ole32.lib shell32.lib comsuppw.lib
+MANIFEST = /MANIFESTUAC:"level='requireAdministrator' uiAccess='false'" /manifest:embed 
+CFLAGS = /c /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /Gm- /EHsc /MT /GS /Gy /fp:precise /permissive- /Zc:wchar_t /Zc:forScope /Zc:inline /Gd
+LFLAGS = /INCREMENTAL:NO /NOLOGO /MANIFEST /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /DYNAMICBASE /NXCOMPAT $(MANIFEST) $(LIBFILES)
+ICFLAGS = $(CFLAGS) $(DEFINES) /Fd$(ITARGETTEMP)\$(IPROJECT).pdb
+UCFLAGS = $(CFLAGS) $(DEFINES) /D DEFUNINSTALL /Fd$(UTARGETTEMP)\$(UPROJECT).pdb
+
+IOBJFILES = \
+	$(ITARGETTEMP)\Logger.obj \
+	$(ITARGETTEMP)\UtilsMisc.obj \
+	$(ITARGETTEMP)\HelperDefs.obj \
+	$(ITARGETTEMP)\Language.obj \
+	$(ITARGETTEMP)\main.obj \
+	$(ITARGETTEMP)\PackageInfo.obj \
+	$(ITARGETTEMP)\InstallerSysImpl.obj \
+	$(ITARGETTEMP)\Resources.obj \
+	$(ITARGETTEMP)\WizardSheet.obj \
+	$(ITARGETTEMP)\$(IPROJECT).res
+
+all: prepare makedemo $(UPROJECT) repack $(IPROJECT)
+
+clean:
+	@if exist $(ITARGETTEMP) rmdir /S /Q $(ITARGETTEMP)
+	@if exist $(UTARGETTEMP) rmdir /S /Q $(UTARGETTEMP)
+	cd Demo\UPIClient
+	nmake clean
+	cd ..\UPIService
+	nmake clean
+	cd ..\..
+	del Makefile
+	del Demo\UPIClient\Makefile
+	del Demo\UPIService\Makefile
+
+makedemo:
+	cd Demo\UPIClient
+	nmake
+	cd ..\UPIService
+	nmake
+	cd ..\..
+
+prepare:
+	-mkdir $(TARGETBIN)
+	-mkdir $(TARGETTEMP)
+	-mkdir $(ITARGETTEMP)
+	-mkdir $(UTARGETTEMP)
+
+repack:
+	cd Src\Platforms\Win32
+	cd ..\..\..\Bundle
+	$(PLATFORM).bat
+	cd ..
+
+$(IPROJECT): $(ITARGETNAME)
+
+$(ITARGETNAME) : $(IOBJFILES)
+	link $(LFLAGS) /out:$(ITARGETPATH)\$(ITARGETNAME) $(IOBJFILES)
+
+$(ITARGETTEMP)\Logger.obj: $(SOURCEPATH)\Common\Logger.cpp
+	cl $(ICFLAGS) /Fo$(ITARGETTEMP)\Logger.obj $?
+ 
+$(ITARGETTEMP)\UtilsMisc.obj: $(SOURCEPATH)\Common\UtilsMisc.cpp
+	cl $(ICFLAGS) /Fo$(ITARGETTEMP)\UtilsMisc.obj $?
+ 
+$(ITARGETTEMP)\HelperDefs.obj: $(SOURCEPATH)\Src\HelperDefs.cpp
+	cl $(ICFLAGS) /Fo$(ITARGETTEMP)\HelperDefs.obj $?
+ 
+$(ITARGETTEMP)\Language.obj: $(SOURCEPATH)\Src\Language.cpp
+	cl $(ICFLAGS) /Fo$(ITARGETTEMP)\Language.obj $?
+ 
+$(ITARGETTEMP)\main.obj: $(SOURCEPATH)\Src\main.cpp
+	cl $(ICFLAGS) /Fo$(ITARGETTEMP)\main.obj $?
+ 
+$(ITARGETTEMP)\PackageInfo.obj: $(SOURCEPATH)\Src\PackageInfo.cpp
+	cl $(ICFLAGS) /Fo$(ITARGETTEMP)\PackageInfo.obj $?
+ 
+$(ITARGETTEMP)\InstallerSysImpl.obj: $(SOURCEPATH)\Src\Platforms\Win32\InstallerSysImpl.cpp
+	cl $(ICFLAGS) /Fo$(ITARGETTEMP)\InstallerSysImpl.obj $?
+ 
+$(ITARGETTEMP)\Resources.obj: $(SOURCEPATH)\Src\Platforms\Win32\Resources.cpp
+	cl $(ICFLAGS) /Fo$(ITARGETTEMP)\Resources.obj $?
+
+$(ITARGETTEMP)\WizardSheet.obj: $(SOURCEPATH)\Src\Wizard\WizardSheet.cpp
+	cl $(ICFLAGS) /Fo$(ITARGETTEMP)\WizardSheet.obj $?
+
+$(ITARGETTEMP)\$(IPROJECT).res : $(SOURCEPATH)\Src\Platforms\Win32\Installer\AppRes.rc
+	rc /nologo /fo$(ITARGETTEMP)\$(IPROJECT).res $?
+
+UOBJFILES = \
+	$(UTARGETTEMP)\Logger.obj \
+	$(UTARGETTEMP)\UtilsMisc.obj \
+	$(UTARGETTEMP)\HelperDefs.obj \
+	$(UTARGETTEMP)\Language.obj \
+	$(UTARGETTEMP)\main.obj \
+	$(UTARGETTEMP)\PackageInfo.obj \
+	$(UTARGETTEMP)\InstallerSysImpl.obj \
+	$(UTARGETTEMP)\Resources.obj \
+	$(UTARGETTEMP)\WizardSheet.obj \
+	$(UTARGETTEMP)\$(UPROJECT).res
+
+$(UPROJECT): $(UTARGETNAME)
+
+$(UTARGETNAME) : $(UOBJFILES)
+	link $(LFLAGS) /out:$(UTARGETPATH)\$(UTARGETNAME) $(UOBJFILES)
+
+$(UTARGETTEMP)\Logger.obj: $(SOURCEPATH)\Common\Logger.cpp
+	cl $(UCFLAGS) /Fo$(UTARGETTEMP)\Logger.obj $?
+ 
+$(UTARGETTEMP)\UtilsMisc.obj: $(SOURCEPATH)\Common\UtilsMisc.cpp
+	cl $(UCFLAGS) /Fo$(UTARGETTEMP)\UtilsMisc.obj $?
+ 
+$(UTARGETTEMP)\HelperDefs.obj: $(SOURCEPATH)\Src\HelperDefs.cpp
+	cl $(UCFLAGS) /Fo$(UTARGETTEMP)\HelperDefs.obj $?
+ 
+$(UTARGETTEMP)\Language.obj: $(SOURCEPATH)\Src\Language.cpp
+	cl $(UCFLAGS) /Fo$(UTARGETTEMP)\Language.obj $?
+ 
+$(UTARGETTEMP)\main.obj: $(SOURCEPATH)\Src\main.cpp
+	cl $(UCFLAGS) /Fo$(UTARGETTEMP)\main.obj $?
+ 
+$(UTARGETTEMP)\PackageInfo.obj: $(SOURCEPATH)\Src\PackageInfo.cpp
+	cl $(UCFLAGS) /Fo$(UTARGETTEMP)\PackageInfo.obj $?
+ 
+$(UTARGETTEMP)\InstallerSysImpl.obj: $(SOURCEPATH)\Src\Platforms\Win32\InstallerSysImpl.cpp
+	cl $(UCFLAGS) /Fo$(UTARGETTEMP)\InstallerSysImpl.obj $?
+ 
+$(UTARGETTEMP)\Resources.obj: $(SOURCEPATH)\Src\Platforms\Win32\Resources.cpp
+	cl $(UCFLAGS) /Fo$(UTARGETTEMP)\Resources.obj $?
+
+$(UTARGETTEMP)\WizardSheet.obj: $(SOURCEPATH)\Src\Wizard\WizardSheet.cpp
+	cl $(UCFLAGS) /Fo$(UTARGETTEMP)\WizardSheet.obj $?
+
+$(UTARGETTEMP)\$(UPROJECT).res : $(SOURCEPATH)\Src\Platforms\Win32\Uninstaller\AppRes.rc
+	rc /nologo /fo$(UTARGETTEMP)\$(UPROJECT).res $?
+

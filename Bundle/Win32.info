@@ -1,0 +1,66 @@
+;$APPBACK	- backup temp path
+;$APPBUNDLE	- temp Bundle path
+;$APPPATH	- destination path
+;$APPTEMP	- installer temp path
+;PROGRAMS	- program files path
+;SYSTEM32	- system32 path
+;Language	- Prompt|English|German|French|Italian|Spanish|Portuguese|Russian|Japanese|Korean|Chinese|Vietnamese|Hindi
+
+[Common]
+UUID=BA5E1D3F-D08D-420F-97B4-0E5007D1DC09
+Version=2.0.1
+AppPath=%PROGRAMS%\UPIDemo
+ProductName=UPIDemo
+Publisher=UPIDemo LLC
+Language=Prompt
+
+[Files]
+UPIClient.exe=,%APPPATH%,755,Administrator:Administrators:Everyone
+UPIService.exe=,%SYSTEM32%,755,Administrator:Administrators:Everyone
+Uninstall.exe=,%APPPATH%,755,Administrator:Administrators:Everyone
+main.conf=,%APPPATH%,644,Administrator:Administrators:Everyone
+
+[Install]
+ExtraConfig=true
+
+[Install.PreCommands]
+
+[Install.PostCommands]
+@1=sc create UPIService binPath= %SystemRoot%\System32\UPIService.exe type= own start= auto
+@2=sc start UPIService
+
+[Update]
+
+[Update.PreCommands]
+@1=xcopy /Y "%APPPATH%\main.conf" "%APPBACK%"
+@2=xcopy /Y "%APPPATH%\main.db" "%APPBACK%"
+
+[Update.PostCommands]
+@1=UPIService.exe -update "%APPBACK%\main.conf" "%APPBACK%\main.db"
+@2=sc stop UPIService
+@3=xcopy /Y "%APPBACK%\main.conf" "%APPPATH%"
+@4=xcopy /Y "%APPBACK%\main.db" "%APPPATH%"
+@5=sc start UPIService
+
+[Repair]
+
+[Repair.PreCommands]
+@1=xcopy /Y "%APPPATH%\main.conf" "%APPBACK%"
+@2=xcopy /Y "%APPPATH%\main.db" "%APPBACK%"
+
+[Repair.PostCommands]
+@1=sc stop UPIService
+@2=xcopy /Y "%APPBACK%\main.conf" "%APPPATH%"
+@3=xcopy /Y "%APPBACK%\main.db" "%APPPATH%"
+@4=sc start UPIService
+
+[Uninstall]
+
+[Uninstall.PreCommands]
+@1=taskkill /F /IM UPIService.exe
+@2=taskkill /F /IM UPIClient.exe
+@3=sc stop UPIService
+
+[Uninstall.PostCommands]
+@1=sc delete UPIService
+

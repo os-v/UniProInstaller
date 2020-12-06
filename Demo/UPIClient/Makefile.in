@@ -1,0 +1,44 @@
+
+PLATFORM = @PLATFORM@
+STATIC = @STATIC@
+LIBFILES = @LIBFILES@
+INCLUDEPATH = @INCLUDEPATH@
+CC = @CC@
+CXX = @CXX@
+CFLAGS = @CFLAGS@
+LFLAGS = @LFLAGS@
+PCFLAGS = @PCFLAGS@
+
+PROJECT = UPIClient
+TARGETNAME = $(PROJECT)
+TARGETPATH = ../../Bin
+TARGETTEMP = ../../Temp/$(PROJECT)
+SOURCEPATH = .
+DEFINES = 
+
+OBJFILES = \
+	$(TARGETTEMP)/Logger.obj \
+	$(TARGETTEMP)/UtilsMisc.obj \
+	$(TARGETTEMP)/main.obj
+
+all: prepare $(PROJECT)
+
+clean:
+	-rm -f -R $(TARGETTEMP)
+
+prepare:
+	-mkdir -p $(TARGETPATH)
+	-mkdir -p $(TARGETTEMP)
+
+$(PROJECT): $(OBJFILES)
+	$(CXX) $(LFLAGS) -o $(TARGETPATH)/$(TARGETNAME) $(OBJFILES) $(LIBFILES)
+
+$(TARGETTEMP)/Logger.obj: $(SOURCEPATH)/../../Common/Logger.cpp
+	$(CXX) $(CFLAGS) $(INCLUDEPATH) $(DEFINES) -o $(TARGETTEMP)/Logger.obj -c $?
+
+$(TARGETTEMP)/UtilsMisc.obj: $(SOURCEPATH)/../../Common/UtilsMisc.cpp
+	$(CXX) $(CFLAGS) $(INCLUDEPATH) $(DEFINES) -o $(TARGETTEMP)/UtilsMisc.obj -c $?
+
+$(TARGETTEMP)/main.obj: $(SOURCEPATH)/main.cpp
+	$(CXX) $(CFLAGS) $(INCLUDEPATH) $(DEFINES) -o $(TARGETTEMP)/main.obj -c $?
+

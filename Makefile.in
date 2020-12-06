@@ -1,0 +1,139 @@
+
+PLATFORM = @PLATFORM@
+STATIC = @STATIC@
+LIBFILES = @LIBFILES@
+INCLUDEPATH = @INCLUDEPATH@
+CC = @CC@
+CXX = @CXX@
+CFLAGS = @CFLAGS@
+LFLAGS = @LFLAGS@
+PCFLAGS = @PCFLAGS@
+ENABLEDEMO = @ENABLEDEMO@
+
+TARGETBIN = ./Bin
+TARGETTEMP = ./Temp
+
+IPROJECT = UPInstall
+ITARGETNAME = $(IPROJECT)
+ITARGETPATH = $(TARGETBIN)
+ITARGETTEMP = $(TARGETTEMP)/$(IPROJECT)
+
+UPROJECT = UPUninstall
+UTARGETNAME = $(UPROJECT)
+UTARGETPATH = $(TARGETBIN)
+UTARGETTEMP = $(TARGETTEMP)/$(UPROJECT)
+
+SOURCEPATH = .
+DEFINES = 
+ICFLAGS = $(CFLAGS)
+UCFLAGS = $(CFLAGS) -D DEFUNINSTALL
+
+IOBJFILES = \
+	$(ITARGETTEMP)/Logger.obj \
+	$(ITARGETTEMP)/UtilsMisc.obj \
+	$(ITARGETTEMP)/HelperDefs.obj \
+	$(ITARGETTEMP)/Language.obj \
+	$(ITARGETTEMP)/main.obj \
+	$(ITARGETTEMP)/PackageInfo.obj \
+	$(ITARGETTEMP)/InstallerSysImpl.obj \
+	$(ITARGETTEMP)/Resources.obj \
+	$(ITARGETTEMP)/WizardSheet.obj
+
+all: prepare makedemo $(UPROJECT) repack $(IPROJECT) finalize
+
+clean:
+	-rm -f -R $(ITARGETTEMP)
+	-rm -f -R $(UTARGETTEMP)
+	cd Demo/UPIClient; make clean; cd ../UPIService; make clean; cd ../..;
+	rm ./Makefile
+	rm ./Demo/UPIClient/Makefile
+	rm ./Demo/UPIService/Makefile
+
+makedemo:
+	if [ $(ENABLEDEMO) = true ]; then cd Demo/UPIClient; make; cd ../UPIService; make; cd ../..; fi
+
+prepare:
+	-mkdir -p $(TARGETTEMP)
+	-mkdir -p $(ITARGETPATH)
+	-mkdir -p $(UTARGETPATH)
+	-mkdir $(ITARGETTEMP)
+	-mkdir $(UTARGETTEMP)
+
+repack:
+	if [ $(PLATFORM) = MacOS ]; then cd Src/Platforms/$(PLATFORM); ./MakeApp.sh Uninstaller; cd ../..; fi
+	cd Bundle; ./$(PLATFORM).sh $(PLATFORM); cd ../..
+
+finalize:
+	if [ $(PLATFORM) = MacOS ]; then cd Src/Platforms/$(PLATFORM); ./MakeApp.sh Installer; ./MakeDMG.sh; cd ../..; fi
+
+$(IPROJECT): $(IOBJFILES)
+	$(CXX) $(LFLAGS) -o $(ITARGETPATH)/$(ITARGETNAME) $(IOBJFILES) $(LIBFILES)
+
+$(ITARGETTEMP)/Logger.obj: $(SOURCEPATH)/Common/Logger.cpp
+	$(CXX) $(ICFLAGS) $(INCLUDEPATH) -o $(ITARGETTEMP)/Logger.obj -c $?
+
+$(ITARGETTEMP)/UtilsMisc.obj: $(SOURCEPATH)/Common/UtilsMisc.cpp
+	$(CXX) $(ICFLAGS) $(INCLUDEPATH) -o $(ITARGETTEMP)/UtilsMisc.obj -c $?
+
+$(ITARGETTEMP)/HelperDefs.obj: $(SOURCEPATH)/Src/HelperDefs.cpp
+	$(CXX) $(ICFLAGS) $(INCLUDEPATH) -o $(ITARGETTEMP)/HelperDefs.obj -c $?
+
+$(ITARGETTEMP)/Language.obj: $(SOURCEPATH)/Src/Language.cpp
+	$(CXX) $(ICFLAGS) $(INCLUDEPATH) -o $(ITARGETTEMP)/Language.obj -c $?
+
+$(ITARGETTEMP)/main.obj: $(SOURCEPATH)/Src/main.cpp
+	$(CXX) $(ICFLAGS) $(INCLUDEPATH) -o $(ITARGETTEMP)/main.obj -c $?
+
+$(ITARGETTEMP)/PackageInfo.obj: $(SOURCEPATH)/Src/PackageInfo.cpp
+	$(CXX) $(ICFLAGS) $(INCLUDEPATH) -o $(ITARGETTEMP)/PackageInfo.obj -c $?
+
+$(ITARGETTEMP)/InstallerSysImpl.obj: $(SOURCEPATH)/Src/Platforms/$(PLATFORM)/InstallerSysImpl.cpp
+	$(CXX) $(ICFLAGS) $(PCFLAGS) $(INCLUDEPATH) -o $(ITARGETTEMP)/InstallerSysImpl.obj -c $?
+
+$(ITARGETTEMP)/Resources.obj: $(SOURCEPATH)/Src/Resources.cpp
+	$(CXX) $(ICFLAGS) $(INCLUDEPATH) -o $(ITARGETTEMP)/Resources.obj -c $?
+
+$(ITARGETTEMP)/WizardSheet.obj: $(SOURCEPATH)/Src/Wizard/WizardSheet.cpp
+	$(CXX) $(ICFLAGS) $(INCLUDEPATH) -o $(ITARGETTEMP)/WizardSheet.obj -c $?
+
+UOBJFILES = \
+	$(UTARGETTEMP)/Logger.obj \
+	$(UTARGETTEMP)/UtilsMisc.obj \
+	$(UTARGETTEMP)/HelperDefs.obj \
+	$(UTARGETTEMP)/Language.obj \
+	$(UTARGETTEMP)/main.obj \
+	$(UTARGETTEMP)/PackageInfo.obj \
+	$(UTARGETTEMP)/InstallerSysImpl.obj \
+	$(UTARGETTEMP)/Resources.obj \
+	$(UTARGETTEMP)/WizardSheet.obj
+
+$(UPROJECT): $(UOBJFILES)
+	$(CXX) $(LFLAGS) -o $(UTARGETPATH)/$(UTARGETNAME) $(UOBJFILES) $(LIBFILES)
+
+$(UTARGETTEMP)/Logger.obj: $(SOURCEPATH)/Common/Logger.cpp
+	$(CXX) $(UCFLAGS) $(INCLUDEPATH) -o $(UTARGETTEMP)/Logger.obj -c $?
+
+$(UTARGETTEMP)/UtilsMisc.obj: $(SOURCEPATH)/Common/UtilsMisc.cpp
+	$(CXX) $(UCFLAGS) $(INCLUDEPATH) -o $(UTARGETTEMP)/UtilsMisc.obj -c $?
+
+$(UTARGETTEMP)/HelperDefs.obj: $(SOURCEPATH)/Src/HelperDefs.cpp
+	$(CXX) $(UCFLAGS) $(INCLUDEPATH) -o $(UTARGETTEMP)/HelperDefs.obj -c $?
+
+$(UTARGETTEMP)/Language.obj: $(SOURCEPATH)/Src/Language.cpp
+	$(CXX) $(UCFLAGS) $(INCLUDEPATH) -o $(UTARGETTEMP)/Language.obj -c $?
+
+$(UTARGETTEMP)/main.obj: $(SOURCEPATH)/Src/main.cpp
+	$(CXX) $(UCFLAGS) $(INCLUDEPATH) -o $(UTARGETTEMP)/main.obj -c $?
+
+$(UTARGETTEMP)/PackageInfo.obj: $(SOURCEPATH)/Src/PackageInfo.cpp
+	$(CXX) $(UCFLAGS) $(INCLUDEPATH) -o $(UTARGETTEMP)/PackageInfo.obj -c $?
+
+$(UTARGETTEMP)/InstallerSysImpl.obj: $(SOURCEPATH)/Src/Platforms/$(PLATFORM)/InstallerSysImpl.cpp
+	$(CXX) $(UCFLAGS) $(PCFLAGS) $(INCLUDEPATH) -o $(UTARGETTEMP)/InstallerSysImpl.obj -c $?
+
+$(UTARGETTEMP)/Resources.obj: $(SOURCEPATH)/Src/Resources.cpp
+	$(CXX) $(UCFLAGS) $(INCLUDEPATH) -o $(UTARGETTEMP)/Resources.obj -c $?
+
+$(UTARGETTEMP)/WizardSheet.obj: $(SOURCEPATH)/Src/Wizard/WizardSheet.cpp
+	$(CXX) $(UCFLAGS) $(INCLUDEPATH) -o $(UTARGETTEMP)/WizardSheet.obj -c $?
+

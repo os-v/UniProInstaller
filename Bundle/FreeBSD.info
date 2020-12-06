@@ -1,0 +1,62 @@
+;$APPBACK	- backup temp path
+;$APPBUNDLE	- temp Bundle path
+;$APPPATH	- destination path
+;$APPTEMP	- installer temp path
+
+[Common]
+UUID=BA5E1D3F-D08D-420F-97B4-0E5007D1DC09
+Version=2.0.1
+AppPath=/usr/share/UPIDemo
+ProductName=UPIDemo
+Publisher=UPIDemo LLC
+Language=Prompt
+
+[Files]
+UPIClient=,$APPPATH,755,root:wheel
+UPIService=,$APPPATH,755,root:wheel
+UPIService.service=UPIService,/etc/rc.d,555,root:wheel
+Uninstall=,$APPPATH,755,root:wheel
+main.conf=,$APPPATH,644,root:wheel
+
+[Install]
+ExtraConfig=true
+
+[Install.PreCommands]
+
+[Install.PostCommands]
+@1=sysrc UPIService_enable="YES"
+@2=service UPIService start
+
+[Update]
+
+[Update.PreCommands]
+@1=cp "$APPPATH/main.conf" "$APPBACK"
+@2=cp "$APPPATH/main.db" "$APPBACK"
+
+[Update.PostCommands]
+@1=$APPPATH/UPIService -update "$APPBACK\main.conf" "$APPBACK\main.db"
+@2=service UPIService stop
+@3=cp "$APPBACK/main.conf" "$APPPATH"
+@4=cp "$APPBACK/main.db" "$APPPATH"
+@5=service UPIService start
+
+[Repair]
+
+[Repair.PreCommands]
+@1=cp "$APPPATH/main.conf" "$APPBACK"
+@2=cp "$APPPATH/main.db" "$APPBACK"
+
+[Repair.PostCommands]
+@1=service UPIService stop
+@2=cp "$APPBACK/main.conf" "$APPPATH"
+@3=cp "$APPBACK/main.db" "$APPPATH"
+@4=service UPIService start
+
+[Uninstall]
+
+[Uninstall.PreCommands]
+@1=service UPIService stop
+@2=sysrc -x UPIService_enable
+@3=pkill -f UPIClient
+
+[Uninstall.PostCommands]
