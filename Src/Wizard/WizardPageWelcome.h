@@ -22,6 +22,7 @@ public:
 
 		m_pLabelText = 0;
 
+		m_sLabelTitle = "";
 		m_sLabelText = "";
 
 		m_fUninstallAllowed = false;
@@ -35,6 +36,8 @@ public:
 
 	virtual bool CreatePage(int nPosX, int nPosY, int nWidth, int nHeight)
 	{
+
+		m_sLabelTitle = CStdStrFormat(GSTR(Welcome), m_pParent->GetProductName());
 
 		if (m_pParent->GetInstallType() == EInstallType::Update)
 			m_sLabelText = CStdStrFormat(GSTR(InstallerWillUpdate), m_pParent->GetProductName(), m_pParent->GetInstallerVersion(), GSTR(ClickNextToContinue));
@@ -74,7 +77,7 @@ public:
 
 	virtual const char *GetTitle()
 	{
-		return GSTR(Welcome);
+		return m_sLabelTitle.c_str();
 	}
 
 	virtual const char *GetSubTitle()
@@ -85,6 +88,7 @@ public:
 protected:
 
 	Fl_Box *m_pLabelText;
+	CStdString m_sLabelTitle;
 	CStdString m_sLabelText;
 
 	bool m_fUninstallAllowed;
