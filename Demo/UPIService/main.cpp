@@ -42,7 +42,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmd
 	return main(__argc, __argv);
 }
 
-DWORD OnServiceHandlerEx(DWORD nControl, DWORD nEventType, LPVOID lpEventData, LPVOID lpContext)
+DWORD WINAPI OnServiceHandlerEx(DWORD nControl, DWORD nEventType, LPVOID lpEventData, LPVOID lpContext)
 {
 
 	LogMessage("OnServiceHandlerEx() -> %X, %X", nControl, nEventType);
@@ -59,7 +59,7 @@ DWORD OnServiceHandlerEx(DWORD nControl, DWORD nEventType, LPVOID lpEventData, L
 	return NO_ERROR;
 }
 
-VOID OnServiceStart(DWORD nNumServicesArgs, LPSTR *lpServiceArgVectors)
+VOID WINAPI OnServiceStart(DWORD nNumServicesArgs, LPSTR *lpServiceArgVectors)
 {
 
 	LogMessage("OnServiceStart()");
