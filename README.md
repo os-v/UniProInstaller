@@ -13,8 +13,30 @@
 ## Required Features
 - Package manager integration on macOS, Ubuntu, FreeBSD
 
-## License
-This software is distributed under the [LGPL 3.0](https://github.com/os-v/UniProInstaller/blob/master/LICENSE) license. Please read LICENSE for information on the software availability and distribution.
+## Build Process
+* Prerequisites:
+	* Unix: gcc
+	* Windows: Platform SDK
+* For OSX configure DevIDUser, DevIDPass, DevIDProv, CertName variables in ./Src/Platforms/MacOS/BuildDMG.sh
+* Download, build and install FLTK: 
+	* https://www.fltk.org/software.php
+	* https://www.fltk.org/doc-1.3/intro.html
+	* make sure all libs are built (for Unix: fltk fltk_images fltk_png fltk_z, for Windows: fltk fltkimages fltkpng fltkzlib)
+	* copy all FLTK headers and libs into include and libs path
+* Clone and build UniProInstaller:
+	* Unix:
+	```
+	git clone https://github.com/os-v/UniProInstaller
+	./configure
+	make
+	```
+	* Windows (in Platform SDK command line):
+	```
+	git clone https://github.com/os-v/UniProInstaller
+	./configure
+	nmake
+	```
+	* Installer should appears in ./Bin folder
 
 ## Screenshots
 <p align="center">
@@ -28,5 +50,7 @@ This software is distributed under the [LGPL 3.0](https://github.com/os-v/UniPro
 	<img alt="MacOS Uninstall" src="https://user-images.githubusercontent.com/73893487/101396330-b89b5100-38fd-11eb-90cb-c32d605169ca.png"/>
 </p>
 
+## License
+This software is distributed under the [LGPL 3.0](https://github.com/os-v/UniProInstaller/blob/master/LICENSE) license. Please read LICENSE for information on the software availability and distribution.
 
 
