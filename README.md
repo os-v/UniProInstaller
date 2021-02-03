@@ -17,6 +17,8 @@
 * Prerequisites:
 	* Unix: gcc
 	* Windows: Platform SDK
+* For Linux:
+	* sudo apt-get install libxcursor-dev libxft-dev libxinerama-dev
 * For OSX configure DevIDUser, DevIDPass, DevIDProv, CertName variables in ./Src/Platforms/MacOS/BuildDMG.sh
 * Download, build and install FLTK: 
 	* https://www.fltk.org/software.php
