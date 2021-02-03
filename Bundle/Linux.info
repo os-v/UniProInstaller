@@ -4,7 +4,7 @@
 ;$APPTEMP	- installer temp path
 
 [Common]
-UUID=BA5E1D3F-D08D-420F-97B4-0E5007D1DC09
+UUID=7BF41657-9014-41DA-A4B6-BFB7A0F10543
 Version=2.0.1
 AppPath=/usr/share/UPIDemo
 ProductName=UPIDemo

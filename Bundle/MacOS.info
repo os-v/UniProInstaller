@@ -4,7 +4,7 @@
 ;$APPTEMP	- installer temp path
 
 [Common]
-UUID=BA5E1D3F-D08D-420F-97B4-0E5007D1DC09
+UUID=7C1E69CA-DE5C-4549-943D-4CD90FF59516
 Version=2.0.1
 AppPath=/Library/Application Support/UPIDemo
 ProductName=UPIDemo
@@ -27,11 +27,8 @@ ExtraConfig=true
 @2=^:launchctl unload -w /Library/LaunchDaemons/com.upidemo.service.plist
 
 [Install.PostCommands]
-@1=defaults write /Library/Preferences/com.apple.loginwindow DisableFDEAutoLogin -bool YES
-@2=defaults write /Library/Preferences/com.apple.loginwindow SHOWFULLNAME YES
-@3=defaults write /Library/Preferences/com.apple.loginwindow PasswordExpirationDays -int 0
-@4=launchctl load /Library/LaunchAgents/com.upidemo.client.plist
-@5=^:launchctl load -w /Library/LaunchDaemons/com.upidemo.service.plist
+@1=launchctl load /Library/LaunchAgents/com.upidemo.client.plist
+@2=^:launchctl load -w /Library/LaunchDaemons/com.upidemo.service.plist
 
 [Update]
 
@@ -63,7 +60,5 @@ ExtraConfig=true
 [Uninstall.PreCommands]
 @1=launchctl unload /Library/LaunchAgents/com.upidemo.client.plist
 @2=^:launchctl unload -w /Library/LaunchDaemons/com.upidemo.service.plist
-@3=security authorizationdb write system.login.console < $APPPATH/ConfLogin.plist
-@4=security authorizationdb write system.login.screensaver use-login-window-ui
 
 [Uninstall.PostCommands]

@@ -7,7 +7,7 @@
 ;Language	- Prompt|English|German|French|Italian|Spanish|Portuguese|Russian|Japanese|Korean|Chinese|Vietnamese|Hindi
 
 [Common]
-UUID=BA5E1D3F-D08D-420F-97B4-0E5007D1DC09
+UUID=91E56FD0-9E2D-4A7B-ACFC-2364B18F9AEB
 Version=2.0.1
 AppPath=%PROGRAMS%\UPIDemo
 ProductName=UPIDemo
