@@ -1,3 +1,11 @@
+#
+#  @file MakeApp.sh
+#  @author Sergii Oryshchenko <sergii.orishchenko@gmail.com>
+#  @see https://github.com/os-v/UniProInstaller/
+#
+#  Created on 19.10.20.
+#  Copyright 2020 Sergii Oryshchenko. All rights reserved.
+#
 
 NAME=$1
 TYPE=$2

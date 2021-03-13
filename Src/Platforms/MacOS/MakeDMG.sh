@@ -1,3 +1,11 @@
+#
+#  @file MakeDMG.sh
+#  @author Sergii Oryshchenko <sergii.orishchenko@gmail.com>
+#  @see https://github.com/os-v/UniProInstaller/
+#
+#  Created on 19.10.20.
+#  Copyright 2020 Sergii Oryshchenko. All rights reserved.
+#
 
 CurDir=$(cd "$(dirname "$0")"; pwd)
 
@@ -10,6 +18,9 @@ IOutputPath=$OutputPath/$ProductName\ Installer.app
 UOutputPath=$OutputPath/$ProductName\ Uninstaller.app
 DMGName=$ProductName.dmg
 DMGPath=$BasePath/$DMGName
+DevIDUser=""
+DevIDPass=""
+DevIDProv=""
 CertName="Apple Development: XXXXXXXXX (YYYYYYYYY)"
 
 rm "$DMGPath"
@@ -21,8 +32,8 @@ mkdir $OutputPath
 cp -a "$BasePath/Install.app" "$IOutputPath"
 cp -a "$BasePath/Uninstall.app" "$UOutputPath"
 
-codesign --force --verify --verbose --sign "$CertName" "$UOutputPath"
-codesign --force --verify --verbose --sign "$CertName" "$IOutputPath"
+codesign --deep --force --verify --verbose --options runtime --sign "$CertName" "$UOutputPath"
+codesign --deep --force --verify --verbose --options runtime --sign "$CertName" "$IOutputPath"
 
 if [ "$2" == "-w" ]; then
    hdiutil create -size 100m -format UDRW $DMGName -volname "$ProductName" -fs HFS+ -srcfolder "$OutputPath"
@@ -38,3 +49,7 @@ mv ./$DMGName "$BasePath"
 
 rm -f -R "$IOutputPath"
 rm -f -R "$UOutputPath"
+
+./Notarize.sh "$ProductName" "$DevIDUser" "$DevIDPass" "$DevIDProv"
+
+
