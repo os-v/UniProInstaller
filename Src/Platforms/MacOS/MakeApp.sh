@@ -1,7 +1,8 @@
 
-TYPE=$1
+NAME=$1
+TYPE=$2
+SRCAPP=../../../Bin/$NAME
 APPNAME=Install
-SRCAPP=../../../Bin/UPInstall
 APPICON=../../Resources/IconI.png
 
 if [ "$TYPE" = "" ]; then
@@ -11,7 +12,6 @@ fi
 
 if [ $TYPE = "Uninstaller" ]; then 
 	APPNAME=Uninstall
-	SRCAPP=../../../Bin/UPUninstall
 	APPICON=../../Resources/IconU.png
 fi
 

@@ -1,34 +1,40 @@
 
 CurDir=$(cd "$(dirname "$0")"; pwd)
 
+ProductName=$1
+
 ConfigName=
 BasePath=../../../Bin/$ConfigName
 OutputPath=$CurDir/Image
+IOutputPath=$OutputPath/$ProductName\ Installer.app
+UOutputPath=$OutputPath/$ProductName\ Uninstaller.app
+DMGName=$ProductName.dmg
+DMGPath=$BasePath/$DMGName
 CertName="Apple Development: XXXXXXXXX (YYYYYYYYY)"
 
-rm "$BasePath/UPIDemo.dmg"
+rm "$DMGPath"
 
-rm -f -R "$OutputPath/UPIDemo Installer.app"
-rm -f -R "$OutputPath/UPIDemo Uninstaller.app"
+rm -f -R "$IOutputPath"
+rm -f -R "$UOutputPath"
 mkdir $OutputPath
 
-cp -a "$BasePath/Install.app" "$OutputPath/UPIDemo Installer.app"
-cp -a "$BasePath/Uninstall.app" "$OutputPath/UPIDemo Uninstaller.app"
+cp -a "$BasePath/Install.app" "$IOutputPath"
+cp -a "$BasePath/Uninstall.app" "$UOutputPath"
 
-codesign --force --verify --verbose --sign "$CertName" "$OutputPath/UPIDemo Uninstaller.app"
-codesign --force --verify --verbose --sign "$CertName" "$OutputPath/UPIDemo Installer.app"
+codesign --force --verify --verbose --sign "$CertName" "$UOutputPath"
+codesign --force --verify --verbose --sign "$CertName" "$IOutputPath"
 
-if [ "$1" == "-w" ]; then
-   hdiutil create -size 100m -format UDRW UPIDemo.dmg -volname "UPIDemo" -fs HFS+ -srcfolder "$OutputPath"
+if [ "$2" == "-w" ]; then
+   hdiutil create -size 100m -format UDRW $DMGName -volname "$ProductName" -fs HFS+ -srcfolder "$OutputPath"
 else
-   hdiutil create UPIDemo.dmg -volname "UPIDemo" -fs HFS+ -srcfolder "$OutputPath"
+   hdiutil create $DMGName -volname "$ProductName" -fs HFS+ -srcfolder "$OutputPath"
 fi
 
-codesign --force --verify --verbose --sign "$CertName" ./UPIDemo.dmg
-codesign -vv --deep-verify ./UPIDemo.dmg
-spctl --verbose=4 --assess --type execute -v ./UPIDemo.dmg
+codesign --force --verify --verbose --sign "$CertName" ./$DMGName
+codesign -vv --deep-verify ./$DMGName
+spctl --verbose=4 --assess --type execute -v ./$DMGName
 
-mv ./UPIDemo.dmg "$BasePath"
+mv ./$DMGName "$BasePath"
 
-rm -f -R "$OutputPath/UPIDemo Installer.app"
-rm -f -R "$OutputPath/UPIDemo Uninstaller.app"
+rm -f -R "$IOutputPath"
+rm -f -R "$UOutputPath"

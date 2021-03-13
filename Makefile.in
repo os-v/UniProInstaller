@@ -10,6 +10,8 @@ LFLAGS = @LFLAGS@
 PCFLAGS = @PCFLAGS@
 ENABLEDEMO = @ENABLEDEMO@
 
+PRODUCTNAME = UPIDemo
+
 TARGETBIN = ./Bin
 TARGETTEMP = ./Temp
 
@@ -45,9 +47,6 @@ clean:
 	-rm -f -R $(ITARGETTEMP)
 	-rm -f -R $(UTARGETTEMP)
 	cd Demo/UPIClient; make clean; cd ../UPIService; make clean; cd ../..;
-	rm ./Makefile
-	rm ./Demo/UPIClient/Makefile
-	rm ./Demo/UPIService/Makefile
 
 makedemo:
 	if [ $(ENABLEDEMO) = true ]; then cd Demo/UPIClient; make; cd ../UPIService; make; cd ../..; fi
@@ -60,11 +59,11 @@ prepare:
 	-mkdir $(UTARGETTEMP)
 
 repack:
-	if [ $(PLATFORM) = MacOS ]; then cd Src/Platforms/$(PLATFORM); ./MakeApp.sh Uninstaller; cd ../..; fi
+	if [ $(PLATFORM) = MacOS ]; then cd Src/Platforms/$(PLATFORM); ./MakeApp.sh $(UPROJECT) Uninstaller; cd ../..; fi
 	cd Bundle; ./$(PLATFORM).sh $(PLATFORM); cd ../..
 
 finalize:
-	if [ $(PLATFORM) = MacOS ]; then cd Src/Platforms/$(PLATFORM); ./MakeApp.sh Installer; ./MakeDMG.sh; cd ../..; fi
+	if [ $(PLATFORM) = MacOS ]; then cd Src/Platforms/$(PLATFORM); ./MakeApp.sh $(IPROJECT) Installer; ./MakeDMG.sh $(PRODUCTNAME); cd ../..; fi
 
 $(IPROJECT): $(IOBJFILES)
 	$(CXX) $(LFLAGS) -o $(ITARGETPATH)/$(ITARGETNAME) $(IOBJFILES) $(LIBFILES)
