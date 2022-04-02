@@ -70,8 +70,11 @@ bool CInstallerSysImpl::MakeRoot(int nArgc, char *pArgv[])
 		return false;
 
 	const char *sPath = pArgv[0];
-	char **pArgs = pArgv + 1;
-	eStatus = AuthorizationExecuteWithPrivileges(pAuthRef, sPath, kAuthorizationFlagDefaults, pArgs, 0);
+	CStdCStringArray pArgsArray;
+	for(int iArg = 1; iArg < nArgc; iArg++)
+		pArgsArray.push_back(pArgv[iArg]);
+	pArgsArray.push_back(0);
+	eStatus = AuthorizationExecuteWithPrivileges(pAuthRef, sPath, kAuthorizationFlagDefaults, (char**)pArgsArray.data(), 0);
 	if(eStatus != errAuthorizationSuccess)
 		return false;
 

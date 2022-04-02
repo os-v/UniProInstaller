@@ -27,8 +27,9 @@
 #define CStdString					std::string
 #define CStdStringW					std::wstring
 #define CStdArray					std::vector
-#define CStdStringArray				std::vector<CStdString>
-#define CStdStringWArray			std::vector<CStdStringW>
+#define CStdStringArray				CStdArray<CStdString>
+#define CStdStringWArray			CStdArray<CStdStringW>
+#define CStdCStringArray			CStdArray<const char*>
 
 #define TOSTRW(s)					CStdStringW(s.begin(), s.end())
 

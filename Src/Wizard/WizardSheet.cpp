@@ -242,7 +242,7 @@ void CWizardSheet::SetActivePage(EPage ePage, bool fSaveCur)
 		m_pInstaller->Create(SOnProgressUpdate, this);
 		m_pInstaller->Start(true);
 	}
-	else if(m_eActivePage == EPageFinish)
+	else if(m_eActivePage == EPageFinish || m_eActivePage == EPageUFinish)
 	{
 		m_pButtonCancel->SetDefault(true);
 	}

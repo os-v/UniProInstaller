@@ -74,7 +74,7 @@ public:
 
 		if(lpButtonOK)
 		{
-			m_pButtonOK = new CCustomButton(nButtonX, nWindowHeight - nButtonHeight - nMargin, nButtonWidth, nButtonHeight, lpButtonOK);
+			m_pButtonOK = new CCustomButton(nButtonX, nWindowHeight - nButtonHeight - nMargin, nButtonWidth, nButtonHeight, lpButtonOK, true);
 			m_pButtonOK->callback(SOnButtonClicked, this);
 			nButtonX += nButtonWidth + nMargin;
 		}
