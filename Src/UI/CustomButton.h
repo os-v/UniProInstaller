@@ -18,7 +18,7 @@ class CCustomButton : public Fl_Button
 {
 public:
 
-	CCustomButton(int X, int Y, int W, int H, const char *L = 0) : Fl_Button(X, Y, W, H, L)
+	CCustomButton(int X, int Y, int W, int H, const char *L = 0, bool fDefault = false) : Fl_Button(X, Y, W, H, L), m_fDefault(fDefault)
 	{
 		SetColor(Fl_Color(UICOLOR_BUTTON), Fl_Color(UICOLOR_PRESSED));
 	}
@@ -29,7 +29,25 @@ public:
 		selection_color(nPressedColor);
 	}
 
+	void SetDefault(bool fDefault)
+	{
+		m_fDefault = fDefault;
+	}
+
+	int handle(int event)
+	{
+		if (m_fDefault && event == FL_SHORTCUT && (Fl::event_key() == FL_Enter || Fl::event_key() == FL_KP_Enter))
+		{
+			simulate_key_action();
+			do_callback();
+			return 1;
+		}
+		return Fl_Button::handle(event);
+	}
+
 private:
+
+	bool m_fDefault;
 
 	virtual void draw()
 	{
@@ -38,6 +56,7 @@ private:
 		Fl_Color col = value() ? selection_color() : color();
 		DrawBox(x(), y(), w(), h(), col);
 		draw_backdrop();
+		//labelfont(m_fDefault ? FL_BOLD : 0);
 		if (labeltype() == FL_NORMAL_LABEL && value())
 		{
 			Fl_Color c = labelcolor();
@@ -54,7 +73,7 @@ private:
 	void DrawBox(int x, int y, int w, int h, Fl_Color c)
 	{
 
-		Fl::set_box_color(Fl_Color(UICOLOR_BORDER));
+		Fl::set_box_color(Fl_Color(m_fDefault ? UICOLOR_BORDER_DEFAULT : UICOLOR_BORDER));
 		fl_begin_loop();
 			fl_vertex(x, y + 2);
 			fl_vertex(x + 2, y);

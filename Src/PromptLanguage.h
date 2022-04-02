@@ -105,7 +105,7 @@ public:
 		int nButtons = 2;
 		int nButtonX = nWindowWidth / 2 - (nButtons * nButtonWidth + (nButtons > 1 ? (nButtons - 1) * nButtonSpaceX : 0)) / 2;
 
-		m_pButtonOK = new CCustomButton(nButtonX, m_pWindow->h() - nButtonHeight - nMargin, nButtonWidth, nButtonHeight, GSTR(OK));
+		m_pButtonOK = new CCustomButton(nButtonX, m_pWindow->h() - nButtonHeight - nMargin, nButtonWidth, nButtonHeight, GSTR(OK), true);
 		m_pButtonOK->callback(SOnButtonClicked, this);
 		nButtonX += nButtonWidth + nMargin;
 

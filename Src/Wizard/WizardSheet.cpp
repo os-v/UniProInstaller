@@ -164,7 +164,7 @@ bool CWizardSheet::Create()
 	m_pButtonAdvanced->callback(SOnButtonAdvanced, this);
 	m_pButtonBack = new CCustomButton(nWindowWidth - (nButtonWidth + nButtonSpaceX) * 3 - nButtonMarginRight, PTCOR(nWindowHeight, nButtonsPanelHeight, nButtonHeight), nButtonWidth, nButtonHeight, "&Prev");
 	m_pButtonBack->callback(SOnButtonBack, this);
-	m_pButtonNext = new CCustomButton(m_pButtonBack->x() + nButtonWidth + nButtonSpaceX, m_pButtonBack->y(), nButtonWidth, nButtonHeight, "&Next");
+	m_pButtonNext = new CCustomButton(m_pButtonBack->x() + nButtonWidth + nButtonSpaceX, m_pButtonBack->y(), nButtonWidth, nButtonHeight, "&Next", true);
 	m_pButtonNext->callback(SOnButtonNext, this);
 	m_pButtonCancel = new CCustomButton(m_pButtonNext->x() + nButtonWidth + nButtonSpaceX, m_pButtonBack->y(), nButtonWidth, nButtonHeight, "&Cancel");
 	m_pButtonCancel->callback(SOnButtonCancel, this);
@@ -241,6 +241,10 @@ void CWizardSheet::SetActivePage(EPage ePage, bool fSaveCur)
 		Fl::add_idle(SOnProgressUpdate, this);
 		m_pInstaller->Create(SOnProgressUpdate, this);
 		m_pInstaller->Start(true);
+	}
+	else if(m_eActivePage == EPageFinish)
+	{
+		m_pButtonCancel->SetDefault(true);
 	}
 
 }
