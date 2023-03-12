@@ -340,7 +340,7 @@ bool CInstallerSysImpl::InstallFinalize()
 
 float CInstallerSysImpl::UIFindScaleFactor()
 {
-	return NSScreen.mainScreen.backingScaleFactor * 100;
+	return 100;//NSScreen.mainScreen.backingScaleFactor * 100;
 }
 
 bool CInstallerSysImpl::ProcessFile(const CStdString &sSrcName, const CStdString &sDstName, const CStdString &sDstPath, const CStdString &sAccessMod, const CStdString &sOwner, bool fInstall, const char *lpBundle)

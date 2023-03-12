@@ -20,6 +20,7 @@
 * For Linux:
 	* sudo apt-get install libxcursor-dev libxft-dev libxinerama-dev
 * For OSX configure DevIDUser, DevIDPass, DevIDProv, CertName variables in ./Src/Platforms/MacOS/BuildDMG.sh
+	* DevIDProv should be generated from: https://appleid.apple.com/ > Sign-In and Security > App-specific passwords > Add new > Use developer account password
 * Download, build and install FLTK: 
 	* https://www.fltk.org/software.php
 	* https://www.fltk.org/doc-1.3/intro.html
