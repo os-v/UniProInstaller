@@ -27,7 +27,7 @@ int main(int argc, char **argv)
 	CStdString sLogPath = "";//"/tmp/UPInstall.log";
 	for(int iArg = 1; iArg < argc; iArg++)
 	{
-		if(!strcmp(argv[iArg], "-l"))
+		if(!strncmp(argv[iArg], "-l", 2))
 			sLogPath = *(argv[iArg] + 2) ? argv[iArg] + 2 : sSelfPath + ".log";
 		else if(!strcmp(argv[iArg], "-v"))
 			fLogStd = true;
