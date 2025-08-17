@@ -20,6 +20,8 @@ public:
 	CInstallerSysImpl();
 	~CInstallerSysImpl();
 
+	void ActivateApp();
+
 	bool IsRoot();
 	bool MakeRoot(int nArgc, char *pArgv[]);
 	int ExecRoot(const char *lpCommand);

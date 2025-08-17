@@ -152,7 +152,7 @@ public:
 	void SetInt(const char *lpGroup, const char *lpName, int nValue)
 	{
 		char pValue[256];
-		sprintf(pValue, "%d", nValue);
+		snprintf(pValue, sizeof(pValue), "%d", nValue);
 		SetStr(lpGroup, lpName, pValue);
 	}
 

@@ -43,6 +43,28 @@ CInstallerSysImpl::~CInstallerSysImpl()
 {
 }
 
+void CInstallerSysImpl::ActivateApp()
+{
+
+	[NSApp activateIgnoringOtherApps:YES];
+	[[NSRunningApplication currentApplication] activateWithOptions:(NSApplicationActivateAllWindows | NSApplicationActivateIgnoringOtherApps)];
+//[[[NSRunningApplication currentApplication] lastObject] activateWithOptions:0];
+
+//	NSAppleScript* s = [[NSAppleScript alloc] initWithSource:@"tell application \"Finder\"\nactivate\nselect the desktop's window\nend tell"];
+	/*NSAppleScript* s = [[NSAppleScript alloc] initWithSource:@"tell application \"Install\" to activate"];
+	NSDictionary* err = nil;
+	[s executeAndReturnError:&err];*/
+
+	//System("osascript -e 'tell application \"Install\" to activate'");
+	//System("osascript -e 'delay 3\ntell application \"Install\" to activate' > /dev/null 2>&1 &");
+
+	/*int nProcessID = [[NSRunningApplication currentApplication] processIdentifier];
+	ProcessSerialNumber pProcess;
+	GetProcessForPID(nProcessID, &pProcess);
+	SetFrontProcessWithOptions(&pProcess, kSetFrontProcessFrontWindowOnly);*/
+
+}
+
 bool CInstallerSysImpl::IsRoot()
 {
 	uid_t nResult = geteuid();

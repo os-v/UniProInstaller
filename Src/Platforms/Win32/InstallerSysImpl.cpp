@@ -40,6 +40,10 @@ CInstallerSysImpl::~CInstallerSysImpl()
 {
 }
 
+void CInstallerSysImpl::ActivateApp()
+{
+}
+
 bool CInstallerSysImpl::IsRoot()
 {
 	return true;

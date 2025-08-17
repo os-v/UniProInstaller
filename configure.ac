@@ -44,8 +44,8 @@ case $host_os in
 		;;
 	darwin*)
 		PLATFORM=MacOS
-		CFLAGS="-pipe -std=gnu++11 -Wno-unused-result -Wno-int-to-pointer-cast -fPIC"
-		LFLAGS="-Wl"
+		CFLAGS="-pipe -std=gnu++11 -Wno-unused-result -Wno-int-to-pointer-cast -fPIC -mmacosx-version-min=10.10"
+		LFLAGS="-Wl -mmacosx-version-min=10.10"
 		PCFLAGS="-x objective-c++"
 		INCLUDEPATH="-I/usr/local/include"
 		LIBFILES="-L/usr/local/lib -lfltk -lfltk_images -lfltk_png -lfltk_z -lpthread -framework Cocoa -framework Security"

@@ -83,6 +83,7 @@ public:
 			m_pPlatformImpl.MakeRoot(nArgc, pArgv);
 			return false;
 		}
+		m_pPlatformImpl.ActivateApp();
 		bool fResult = m_pPlatformImpl.Prepare(m_eStartupType, nArgc, pArgv);
 		if(!fResult)
 			return false;

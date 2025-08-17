@@ -161,7 +161,7 @@ void LogAMessage(const char *lpScope, const char *lpFmt, va_list args)
 	bool fLock = pLock.Lock(250);
 #endif
 
-	int nLength = sprintf(pMessage, "%.2d.%.2d.%.2d %.2d-%.2d-%.2d.%.3d: [%d] [%d] [%s] [%s] ", pTime.tm_year % 100, pTime.tm_mon + 1, pTime.tm_mday, pTime.tm_hour, pTime.tm_min, pTime.tm_sec, (int)nTimeMS, (int)pid, (int)tid, GProcName, lpScope);
+	int nLength = snprintf(pMessage, LOG_MAX_MESSAGE, "%.2d.%.2d.%.2d %.2d-%.2d-%.2d.%.3d: [%d] [%d] [%s] [%s] ", pTime.tm_year % 100, pTime.tm_mon + 1, pTime.tm_mday, pTime.tm_hour, pTime.tm_min, pTime.tm_sec, (int)nTimeMS, (int)pid, (int)tid, GProcName, lpScope);
 
 	int nMessage = vsnprintf(pMessage + nLength, LOG_MAX_MESSAGE - nLength, lpFmt, args);
 	nLength += (nMessage < 0 ? 0 : (nMessage >= LOG_MAX_MESSAGE - nLength ? LOG_MAX_MESSAGE - nLength - 1 : nMessage));
